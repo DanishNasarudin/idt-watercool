@@ -4,14 +4,16 @@ import nodemailer from "nodemailer";
 export async function POST(req: NextRequest, res: NextResponse) {
   const data = await req.json();
   console.log(data);
-  if (!data.name || !data.email || !data.position || !data.attach) {
-    return NextResponse.json({ message: "Bad request" }, { status: 500 });
+  if (
+    !data.name ||
+    !data.email ||
+    !data.contact ||
+    !data.state ||
+    !data.reason ||
+    !data.budget
+  ) {
+    return NextResponse.json({ message: "Bad request" }, { status: 501 });
   }
-
-  const fileName =
-    process.env.NODE_ENV === "production"
-      ? data.attach.split("/").pop()
-      : data.attach.split("\\").pop();
 
   try {
     const transporter = nodemailer.createTransport({
@@ -30,14 +32,23 @@ export async function POST(req: NextRequest, res: NextResponse) {
       to: data.email,
       cc: process.env.EMAIL,
       replyTo: data.email,
-      subject: `New Application: ${data.position} position from ${data.name}`,
+      subject: `New Watercool Enquiry from ${data.name}`,
       html: `
       <p>Hi <b>${data.name}</b>,</p>
-      <p>Thank you for applying for the ${data.position} position.</p>
-      <p>We will contact you if you pass our first screening.</p>
+      <p>Thank you for reaching out.</p>
+      <p>We will contact you for further details soon.</p>
+      <br />
+      <p>Information:</p>
+      <p>Name: ${data.name}</p>
+      <p>Email: ${data.email}</p>
+      <p>Contact: ${data.contact}</p>
+      <p>State: ${data.state}</p>
+      <p><b>Budget: ${data.budget}</b></p>
+      <p><b>PC Usage: ${data.reason}</b></p>
+      <p>Additional Requirements: ${data.requirements}</p>
+      <br />
       <p>Best regards,</p>
       <p>Ideal Tech PC Team.</p>`,
-      attachments: [{ filename: fileName, path: data.attach }],
     };
 
     // transporter.verify(function (error: any, success: any) {

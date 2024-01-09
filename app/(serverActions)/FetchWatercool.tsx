@@ -20,11 +20,11 @@ async function fetchWatercool() {
     body: JSON.stringify({
       query: `
         query Watercool {
-          bulkImages {
+          bulkImages(first:50) {
             nodes {
-              imageUrls
               title
               content
+              imageUrls
             }
           }
         }`,
@@ -34,12 +34,12 @@ async function fetchWatercool() {
       Accept: "application/json",
     },
     next: {
-      revalidate: 10,
+      revalidate: 60,
     },
   });
 
   const responseData: WatercoolsResponse = await response.json();
-  // console.log(responseData, "check json");
+  // console.log(responseData.data.bulkImages.nodes, "check json");
   return responseData.data.bulkImages.nodes;
 }
 

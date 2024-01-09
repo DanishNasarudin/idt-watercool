@@ -1,5 +1,6 @@
 "use client";
 
+import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import {
   RiArrowDropDownFill,
@@ -26,17 +27,30 @@ function Navbar({}: Props) {
       setHideNavbar(false);
     }
   }, [scroll.y, scroll.lastY]);
+
+  // ------ clear the link from google analytics
+
+  const router = useRouter();
+  const pathname = String(window.location.search);
+
+  useEffect(() => {
+    if (pathname.includes("_ga") || pathname.includes("_gl")) {
+      router.replace("/");
+      // console.log("pass");
+    }
+  }, [pathname]);
+
   return (
     <>
       <nav
         className={`
     bg-primary/80 sticky border-b-[1px] border-[#323232] z-50 transition-all top-0
+    before:absolute before:w-full before:h-full before:content-[''] before:backdrop-blur-md before:top-0 before:-z-10
     ${hideNavbar ? "translate-y-[-100%]" : ""}
     `}
       >
         <div
           className="
-        before:absolute before:w-full before:h-full before:content-[''] before:backdrop-blur-md before:top-0 before:-z-10
       relative max-w-[1060px] mx-auto"
         >
           <ul
