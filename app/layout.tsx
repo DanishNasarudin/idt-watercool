@@ -3,12 +3,18 @@ import dynamic from "next/dynamic";
 import { Inter } from "next/font/google";
 import Footer from "./(components)/Footer";
 import "./globals.css";
+import { NextUIProvider } from "@nextui-org/react";
 
 const Navbar = dynamic(() => import("./(components)/Navbar"), { ssr: false });
 
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
+  metadataBase: new URL(
+    process.env.NODE_ENV === "production"
+      ? "https://watercool.idealtech.com.my"
+      : "http://localhost:3000"
+  ),
   title: "Ideal Tech PC Watercooling",
   description:
     "Extreme PC customization with Watercooling Solutions through Ideal Tech PC.",
@@ -53,10 +59,12 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={`${inter.className} relative`}>
-        <Navbar />
-        <div className="mx-auto">{children}</div>
-        <div className="h-[50vh]"></div>
-        <Footer />
+        <NextUIProvider>
+          <Navbar />
+          <div className="mx-auto">{children}</div>
+          <div className="h-[50vh]"></div>
+          <Footer />
+        </NextUIProvider>
       </body>
     </html>
   );
