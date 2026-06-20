@@ -2,6 +2,7 @@ import { NextUIProvider } from "@nextui-org/react";
 import { Metadata } from "next";
 import dynamic from "next/dynamic";
 import { Inter } from "next/font/google";
+import { getNavbarMenu } from "@/services/navbarActions";
 import Footer from "./(components)/Footer";
 import "./globals.css";
 
@@ -51,16 +52,18 @@ export const metadata: Metadata = {
   },
 };
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
+  const menuList = await getNavbarMenu();
+
   return (
     <html lang="en">
       <body className={`${inter.className} relative`}>
         <NextUIProvider>
-          <Navbar />
+          <Navbar menuList={menuList} />
           <div className="mx-auto">{children}</div>
           <div className="h-[50vh]"></div>
           <Footer />
