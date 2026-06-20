@@ -36,3 +36,6 @@ next-env.d.ts
 
 *.zip
 *.pdf
+
+# husky
+.husky/_/
